@@ -9,13 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"  
+      - name: Log in to DockerHub
+        run: echo "${{secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - run: docker build -t sidsipani23/docker-react -f Dockerfile.dev .      
       - run: docker run -e CI=true sidsipani23/docker-react npm test      
       - run: docker push sidsipani23/docker-react      
       
       - name: Generate deployment package
-        run: zip deploy.zip Dockerrun.aws.json
+        run: zip -r deploy.zip . -x '*.git*'
       
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
