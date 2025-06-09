@@ -1,6 +1,6 @@
-FROM node:16-alpine AS builder
+FROM node:alpine AS builder
 WORKDIR '/app'
-EXPOSE 8080
+EXPOSE 3000
 COPY package.json .
 RUN npm install
 COPY . .
